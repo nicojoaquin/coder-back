@@ -1,0 +1,1 @@
+[{"title":"Campera","price":14000,"thumbnail":"imagencampera.jpg","id":1},{"title":"Pantalon","price":9000,"thumbnail":"imagenpantalon.jpg","id":2},{"title":"Billetera","price":2500,"thumbnail":"imagenbilletera.jpg","id":3}]
