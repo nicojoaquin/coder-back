@@ -1,6 +1,6 @@
 const express = require('express');
 const randomProduct = require('./helper/random');
-const products = require('./products');
+const products = require('./models/products');
 const app = express();
 const PORT = 5000;
 
@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
 
 app.get('/productos', async (req, res) => {
     const getProducts = await products.getAll();
-    res.send(getProducts);
+    res.send(JSON.parse(getProducts));
 });
 
 app.get('/productoRandom', async (req, res) => {

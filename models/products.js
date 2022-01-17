@@ -51,8 +51,7 @@ class Container {
     }
     async deleteAll(){
         try {
-            return await fs.promises.writeFile(this.route, JSON.stringify([]))
-            
+            return await fs.promises.writeFile(this.route, JSON.stringify([]))       
         } catch (err) {
             console.warn(err);
         }
