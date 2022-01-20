@@ -8,7 +8,7 @@ class Container {
     async getAll(){
         try {
             const res = await fs.promises.readFile(this.route, this.format );   
-            return res;
+            return JSON.parse(res);
         } catch (err) {
             console.log(err);
         }
@@ -16,7 +16,6 @@ class Container {
     async save(product){
         try {
             let contenedor = await this.getAll();
-            contenedor = await JSON.parse(contenedor);
             let max = contenedor.length;
             max === 0 ? product.id = 1 : product.id = contenedor[max - 1].id + 1;
             contenedor.push(product);
@@ -29,7 +28,6 @@ class Container {
     async getById(id){
         try {
             let contenedor = await this.getAll();
-            contenedor = await JSON.parse(contenedor);
             const product = contenedor.find( prod => prod.id === id);
             return product;
         } catch (err) {
@@ -40,7 +38,6 @@ class Container {
     async deleteById(id){
         try {
             let contenedor = await this.getAll();
-            contenedor = await JSON.parse(contenedor);
             const newContainer = contenedor.filter( prod => prod.id !== id)
             const productsJson = JSON.stringify(newContainer);
             return await fs.promises.writeFile(this.route, productsJson); 

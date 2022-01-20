@@ -1,9 +1,11 @@
 const express = require('express');
-const randomProduct = require('./helper/random');
 const products = require('./models/products');
+const randomProduct = require('./helper/random');
+
 const app = express();
 const PORT = 5000;
 
+app.use(express.json());
 
 //Routes
 app.get('/', (req, res) => {
@@ -12,14 +14,32 @@ app.get('/', (req, res) => {
 
 app.get('/productos', async (req, res) => {
     const getProducts = await products.getAll();
-    res.send(JSON.parse(getProducts));
+    res.json(getProducts);
 });
+
+app.get('/productos/:id', async (req, res) => {
+    const id = req.params.id;
+    const getProduct = await products.getById(JSON.parse(id));
+    res.json(getProduct);
+}); 
 
 app.get('/productoRandom', async (req, res) => {
-    const getProduct = await products.getById(randomProduct(1, 4));
-    res.send(getProduct);
+    const getProduct = await products.getById(randomProduct(1, 3));
+    res.json(getProduct);
 });
 
+app.post('/productos', async (req, res) => {
+    const product = req.body;
+    await products.save(product);
+    res.json({msg: "ok", product});
+});
+
+app.delete('/productos/:id', async (req, res) => {
+    const id = req.params.id;
+    await products.deleteById(JSON.parse(id));
+
+    res.json({ok: true});
+});
 
 //Server
 const server = app.listen(PORT, () => {
