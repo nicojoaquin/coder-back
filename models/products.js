@@ -1,10 +1,12 @@
 const fs = require('fs');
 
 class Container {
+
     constructor(route, format) {
         this.route = route;
         this.format = format;
-    }
+    };
+
     async getAll(){
         try {
             const res = await fs.promises.readFile(this.route, this.format );   
@@ -12,7 +14,18 @@ class Container {
         } catch (err) {
             console.log(err);
         }
-    }
+    };
+
+    async getById(id){
+        try {
+            let contenedor = await this.getAll();
+            const product = contenedor.find( prod => prod.id === id);
+            return product;
+        } catch (err) {
+            console.warn(err);
+        }
+    };
+
     async save(product){
         try {
             let contenedor = await this.getAll();
@@ -24,17 +37,17 @@ class Container {
         } catch (err) {
             console.warn(err);
         }
-    }
-    async getById(id){
-        try {
-            let contenedor = await this.getAll();
-            const product = contenedor.find( prod => prod.id === id);
-            return product;
-        } catch (err) {
-            console.warn(err);
-        }
+    };
+    
+    async update(id, product){
+        let contenedor = await this.getAll();
+        const updatedProducts = contenedor.map( prod => prod.id === id ?
+            {...prod, ...product}
+            :
+            prod);
+        return await fs.promises.writeFile(this.route, JSON.stringify(updatedProducts)); 
+    };
 
-    }
     async deleteById(id){
         try {
             let contenedor = await this.getAll();
@@ -44,16 +57,17 @@ class Container {
         } catch (err) {
            console.warn(err); 
         }
+    };
 
-    }
     async deleteAll(){
         try {
             return await fs.promises.writeFile(this.route, JSON.stringify([]))       
         } catch (err) {
             console.warn(err);
         }
-    }
-}
+    };
+
+};
 
 const products = new Container('./products.txt', 'utf-8');
 // products.save({title: "Campera", price: 14000, thumbnail: "imagencampera.jpg"});
