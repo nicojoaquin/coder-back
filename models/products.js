@@ -18,8 +18,8 @@ class Container {
 
     async getById(id){
         try {
-            let contenedor = await this.getAll();
-            const product = contenedor.find( prod => prod.id === id);
+            let products = await this.getAll();
+            const product = products.find( prod => prod.id === id);
             return product;
         } catch (err) {
             console.warn(err);
@@ -28,20 +28,19 @@ class Container {
 
     async save(product){
         try {
-            let contenedor = await this.getAll();
-            let max = contenedor.length;
-            max === 0 ? product.id = 1 : product.id = contenedor[max - 1].id + 1;
-            contenedor.push(product);
-            const productsJson = JSON.stringify(contenedor);
-            await fs.promises.writeFile(this.route, productsJson);
+            let products = await this.getAll();
+            let maxNum = products.length;
+            maxNum === 0 ? product.id = 1 : product.id = products[maxNum - 1].id + 1;
+            products.push(product);
+            await fs.promises.writeFile(this.route, JSON.stringify(products));
         } catch (err) {
             console.warn(err);
         }
     };
     
     async update(id, product){
-        let contenedor = await this.getAll();
-        const updatedProducts = contenedor.map( prod => prod.id === id ?
+        let products = await this.getAll();
+        const updatedProducts = products.map( prod => prod.id === id ?
             {...prod, ...product}
             :
             prod);
@@ -50,10 +49,9 @@ class Container {
 
     async deleteById(id){
         try {
-            let contenedor = await this.getAll();
-            const newContainer = contenedor.filter( prod => prod.id !== id)
-            const productsJson = JSON.stringify(newContainer);
-            return await fs.promises.writeFile(this.route, productsJson); 
+            let products = await this.getAll();
+            const newProducts = products.filter( prod => prod.id !== id)
+            return await fs.promises.writeFile(this.route, JSON.stringify(newProducts)); 
         } catch (err) {
            console.warn(err); 
         }
