@@ -1,1 +1,1 @@
-[{"title":"Remera","price":4500,"thumbnail":"imagenremera.jpg","id":1},{"title":"Campera","price":16700,"thumbnail":"imagencampera.jpg","id":2},{"title":"Camisa","price":7800,"thumbnail":"imagencamisa.jpg","id":3}]
+[{"title":"Remera","price":4500,"thumbnail":"imagenremera.jpg","id":1},{"title":"Campera","price":16700,"thumbnail":"imagencampera.jpg","id":2},{"title":"Camisa","price":7700,"thumbnail":"imagencamisa.jpg","id":3},{"title":"Pantalón","price":5300,"thumbnail":"imagenpantalon.jpg","id":4}]

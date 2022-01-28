@@ -6,7 +6,6 @@ const router = express.Router();
 //Obtener todos los productos
 router.get('/', async (req, res) => {
   const getProducts = await products.getAll();
-  
   res.json({ok: true, products: getProducts});
 });
 
@@ -31,7 +30,7 @@ router.post('/', async (req, res) => {
   product.price = parseInt(product.price)
   await products.save(product);
 
-  res.json({ok: true, product});
+  res.redirect("/");
 });
 
 //Editar producto por id
