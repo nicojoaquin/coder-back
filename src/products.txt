@@ -1,1 +1,1 @@
-[{"title":"Iphone 11","price":700,"thumbnail":"iphone.jpg","id":1},{"title":"Iphone X","price":600,"thumbnail":"ihphonex.jpg","id":2},{"title":"Samsung Galaxy S21","price":800,"thumbnail":"galaxy21.jpg","id":3}]
+[{"title":"Iphone 11","price":600,"thumbnail":"iphone11.jpg","id":1},{"title":"Iphone XR","price":500,"thumbnail":"iphonexr.jpg","id":2},{"title":"Samsung Galaxy S21","price":750,"thumbnail":"galaxy21.jpg","id":3}]

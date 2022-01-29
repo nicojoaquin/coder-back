@@ -10,7 +10,7 @@ class Container {
     //Obtener todo el array de producto
     async getAll(){
         try {
-            const res = await fs.promises.readFile(this.route, this.format );   
+            const res = await fs.promises.readFile(this.route, this.format );  
             return JSON.parse(res);
         } catch (err) {
             console.log(err);
@@ -56,6 +56,7 @@ class Container {
         try {
             let products = await this.getAll();
             const newProducts = products.filter( prod => prod.id !== id)
+            console.log(newProducts);
             return await fs.promises.writeFile(this.route, JSON.stringify(newProducts)); 
         } catch (err) {
            console.warn(err); 
