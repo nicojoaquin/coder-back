@@ -1,7 +1,7 @@
-const express = require('express');
+const {Router} = require('express');
 const {readProducts, readProductById, createProduct, updateProduct, deleteProduct, } = require('../controllers/products');
 
-const router = express.Router();
+const router = Router();
 
 //Petición GET
 router.get('/', readProducts);

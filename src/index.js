@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 require('dotenv').config()
 
 //Variables
@@ -9,16 +10,19 @@ const PORT = process.env.PORT || 5000;
 
 //EJS
 app.set('view engine', 'ejs');
-app.set('views', __dirname + '/views/pages');
+app.set('views', path.join(__dirname + '/views/pages'));
 
 //Express
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(path.join(__dirname + '/public')));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 //...........Settings.............
 
 //Routes
+app.get('/', (req, res) => {
+  res.send('<h1>Inicio</h1>')
+});
 app.use('/admin', require('./routes/admin'));
 app.use('/api/products', require('./routes/products'));
 
