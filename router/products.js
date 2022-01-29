@@ -30,13 +30,14 @@ router.post('/', async (req, res) => {
   product.price = parseInt(product.price)
   await products.save(product);
 
-  res.redirect("/");
+  res.redirect("/admin");
 });
 
 //Editar producto por id
 router.put('/:id', async (req, res) => {
   const {id} = req.params;
   const newProduct = req.body;
+  newProduct.price = parseInt(newProduct.price)
   await products.update(JSON.parse(id), newProduct);
 
   res.json({ok: true, product: newProduct});

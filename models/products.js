@@ -7,6 +7,7 @@ class Container {
         this.format = format;
     };
 
+    //Obtener todo el array de producto
     async getAll(){
         try {
             const res = await fs.promises.readFile(this.route, this.format );   
@@ -16,6 +17,7 @@ class Container {
         }
     };
 
+    //Obtener producto del array por idsuccess
     async getById(id){
         try {
             let products = await this.getAll();
@@ -26,6 +28,7 @@ class Container {
         }
     };
 
+    //Agregar un nuevo producto al array con un id que se suma
     async save(product){
         try {
             let products = await this.getAll();
@@ -38,6 +41,7 @@ class Container {
         }
     };
     
+    //Actualizar un producto del array por su id
     async update(id, product){
         let products = await this.getAll();
         const updatedProducts = products.map( prod => prod.id === id ?
@@ -47,6 +51,7 @@ class Container {
         return await fs.promises.writeFile(this.route, JSON.stringify(updatedProducts)); 
     };
 
+    //Eliminar un producto del array por su id
     async deleteById(id){
         try {
             let products = await this.getAll();
@@ -57,6 +62,7 @@ class Container {
         }
     };
 
+    //Eliminar todos los productos del array
     async deleteAll(){
         try {
             return await fs.promises.writeFile(this.route, JSON.stringify([]))       
@@ -68,9 +74,5 @@ class Container {
 };
 
 const products = new Container('./products.txt', 'utf-8');
-// products.save({title: "Campera", price: 14000, thumbnail: "imagencampera.jpg"});
-// products.getById(2)
-// products.deleteById(3);
-// products.deleteAll()
 
 module.exports = products;

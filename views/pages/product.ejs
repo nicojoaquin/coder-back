@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include ('../template/template') %>
+  <body>
+    <div class="container mt-5">
+      <h1 class="text-center">Editar producto</h1>
+      <hr />
+      <div class="d-flex justify-content-center mt-5">
+        <% if (product) { %>
+          <form id="formEditar" data-id = "<%= product.id %>"  class="w-50">
+            <div class="mb-3">
+              <input
+                type="text"
+                class="form-control"
+                name="title"
+                placeholder="Nombre"
+                value="<%= product.title %> "
+              />
+            </div>
+            <div class="mb-3">
+              <input
+                type="text"
+                class="form-control"
+                name="price"
+                placeholder="Precio"
+                value="<%= product.price %> "
+              />
+            </div>
+            <div class="mb-3">
+              <input
+                type="text"
+                class="form-control"
+                name="thumbnail"
+                placeholder="Imagen"
+                value="<%= product.thumbnail %> "
+              />
+            </div>
+            <button type="submit" class="btn btn-success">Enviar</button>
+          </form>
+          <% } else{ %>  
+            <h2 class="mt-5 text-danger">No se encuentra el producto</h2>
+         <% } %>
+         
+      <script src="/js/update.js"></script>
+  </body>
+</html>

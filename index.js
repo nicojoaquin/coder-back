@@ -1,27 +1,30 @@
 const express = require('express');
-const products = require('./models/products');
+require('dotenv').config()
+
+//Variables
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT || 5000;
 
 //Comandos
+
+//EJS
 app.set('view engine', 'ejs');
-app.set('views', __dirname + '/views');
+app.set('views', __dirname + '/views/pages');
+
+//Express
 app.use(express.static(__dirname + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-app.get('/', async (req, res) => {
-  const getProducts = await products.getAll();
-  res.render('index', {products: getProducts});
-});
-
 //Routes
-app.use('/api/productos', require('./router/products'));
+app.use('/admin', require('./router/admin'));
+app.use('/api/products', require('./router/products'));
 
 //Server
 const server = app.listen(PORT, () => {
     console.log(`Server en ${PORT}`);
 });
 
+//Error en servidor
 server.on('error', error => console.log(`Error en el servidor ${error}`));
 

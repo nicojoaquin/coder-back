@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include ('../template/template') %> 
+  <body>
+    <div class="container mt-5">
+      <h1 class="text-center">Agregar producto</h1>
+      <hr />
+      <div class="d-flex justify-content-center mt-5">
+        <form action="/api/products" method="POST" class="w-50">
+          <div class="mb-3">
+            <input
+              type="text"
+              class="form-control"
+              name="title"
+              placeholder="Nombre"
+            />
+          </div>
+          <div class="mb-3">
+            <input
+              type="text"
+              class="form-control"
+              name="price"
+              placeholder="Precio"
+            />
+          </div>
+          <div class="mb-3">
+            <input
+              type="text"
+              class="form-control"
+              name="thumbnail"
+              placeholder="Imagen"
+            />
+          </div>
+          <button type="submit" class="btn btn-success">Enviar</button>
+        </form>
+      </div>
+    <div class="container mt-5">
+      <% if (products.length > 0) { %>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Editar</th>
+              <th scope="col">Eliminar</th>
+            </tr>
+          </thead>
+          <tbody id="productsContainer">
+              <% products.forEach(product => { %>
+                <tr>
+                  <th scope="row"><%= product.id %></th>
+                  <td><%= product.title %></td>
+                  <td>$<%= product.price %></td>        
+                  <td><a href="/admin/product/<%= product.id %>"><button class="btn btn-primary" id="editarBtn"><i class="bi bi-pencil-fill"></i></button></a></td>
+                  <td><button class="btn btn-danger" data-id = "<%= product.id %>"><i class="bi bi-trash-fill" id="eliminarBtn" data-id = "<%= product.id %>"></i></button></td>
+                </tr>
+              <% }) %>
+          </tbody>
+        </table>
+      <% } else { %>  
+        <h2 class="alert alert-danger text-center">No hay productos para mostrar</h2>
+      <% } %>
+    </div>
+    
+    <script src="/js/delete.js"></script>
+  </body>
+</html>
