@@ -73,6 +73,6 @@ class Container {
 
 };
 
-const products = new Container('./products.txt', 'utf-8');
+const products = new Container('./src/products.txt', 'utf-8');
 
 module.exports = products;
