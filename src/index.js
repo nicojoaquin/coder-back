@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 require('dotenv').config()
 
+
 //Variables
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -10,10 +11,10 @@ const PORT = process.env.PORT || 5000;
 
 //EJS
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname + '/views/pages'));
+app.set('views', path.join(__dirname, 'views'));
 
 //Express
-app.use(express.static(path.join(__dirname + '/public')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
