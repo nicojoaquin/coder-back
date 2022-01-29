@@ -17,8 +17,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 //Routes
-app.use('/admin', require('./router/admin'));
-app.use('/api/products', require('./router/products'));
+app.use('/admin', require('./routes/admin'));
+app.use('/api/products', require('./routes/products'));
 
 //Server
 const server = app.listen(PORT, () => {
