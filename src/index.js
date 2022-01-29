@@ -5,7 +5,7 @@ require('dotenv').config()
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-//Comandos
+//...........Settings.............
 
 //EJS
 app.set('view engine', 'ejs');
@@ -16,6 +16,8 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+//...........Settings.............
+
 //Routes
 app.use('/admin', require('./routes/admin'));
 app.use('/api/products', require('./routes/products'));
@@ -25,6 +27,6 @@ const server = app.listen(PORT, () => {
     console.log(`Server en ${PORT}`);
 });
 
-//Error en servidor
+//Error
 server.on('error', error => console.log(`Error en el servidor ${error}`));
 
