@@ -1,6 +1,6 @@
 const formEditar = document.querySelector('#formEditar');
 
-formEditar.addEventListener('submit', async (e) => {
+formEditar?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const id = formEditar.dataset.id;  
   const title = formEditar.elements['title'].value.trim();

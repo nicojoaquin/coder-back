@@ -1,0 +1,18 @@
+extends layout
+block content
+  div(class="container mt-5")
+    if product
+      h1(class="text-center") Editar producto
+      hr
+      div(class="d-flex justify-content-center mt-5")
+      form(id="formEditar" data-id =product.id  class="w-50")
+        div(class="mb-3")
+          input(type="text" class="form-control" name="title" placeholder="Nombre" value=product.title)
+        div(class="mb-3")
+          input(type="text" class="form-control" name="price" placeholder="Precio" value=product.price)
+        div(class="mb-3")
+          input(type="text" class="form-control" name="thumbnail" placeholder="Imagen" value=product.thumbnail)
+        button(type="submit" class="btn btn-success") Enviar
+    else 
+      h2(class="mt-5 text-danger text-center") No se encuentra el producto
+  script(src="/js/update.js")

@@ -1,7 +1,7 @@
 const productsContainer = document.querySelector('#productsContainer');
 const button = document.querySelectorAll('#eliminarBtn');
 
-productsContainer.addEventListener('click', async (e) => {
+productsContainer?.addEventListener('click', async (e) => {
   const btn = e.target;
   
   if(btn.classList.contains('bi-trash-fill') || btn.classList.contains("btn-danger")){

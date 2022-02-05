@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const { engine } = require ('express-handlebars');
 require('dotenv').config()
 
 
@@ -8,6 +9,17 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 //...........Settings.............
+
+//HBS
+// app.engine('hbs', engine({
+//   extname: 'hbs'
+// }));
+// app.set('view engine', 'hbs')
+// app.set('views', path.join(__dirname, 'views/hbs'));
+
+//PUG
+// app.set('view engine', 'pug')
+// app.set('views', path.join(__dirname, 'views/pug'));
 
 //EJS
 app.set('view engine', 'ejs');

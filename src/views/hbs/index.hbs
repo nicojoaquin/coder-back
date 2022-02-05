@@ -1,0 +1,63 @@
+<div class="container mt-5">
+      <h1 class="text-center">Agregar producto</h1>
+      <hr />
+      <div class="d-flex justify-content-center mt-5">
+        <form action="/api/products" method="POST" class="w-50">
+          <div class="mb-3">
+            <input
+              type="text"
+              class="form-control"
+              name="title"
+              placeholder="Nombre"
+            />
+          </div>
+          <div class="mb-3">
+            <input
+              type="text"
+              class="form-control"
+              name="price"
+              placeholder="Precio"
+            />
+          </div>
+          <div class="mb-3">
+            <input
+              type="text"
+              class="form-control"
+              name="thumbnail"
+              placeholder="Imagen"
+            />
+          </div>
+          <button type="submit" class="btn btn-success">Enviar</button>
+        </form>
+      </div>
+    <div class="container mt-5">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Editar</th>
+              <th scope="col">Eliminar</th>
+            </tr>
+          </thead>
+          {{#if listExists}}
+            <tbody id="productsContainer">
+              {{#each products}}
+                <tr>
+                  <th scope="row">{{this.id}}</th>
+                  <td>{{this.title}}</td>
+                  <td>${{this.price}}</td>        
+                  <td><a href="/admin/product/{{this.id}}"><button class="btn btn-primary" id="editarBtn"><i class="bi bi-pencil-fill"></i></button></a></td>
+                  <td><button class="btn btn-danger" data-id = "{{this.id}}"><i class="bi bi-trash-fill" id="eliminarBtn" data-id = "{{this.id}}"></i></button></td>
+                </tr>
+              {{/each}}  
+            </tbody> 
+          {{/if}}
+          {{#else}}
+            <h2 class="alert alert-danger text-center">No hay productos para mostrar</h2>
+          {{/else}}
+        </table>
+    </div>
+    
+    <script src="/js/delete.js"></script>
