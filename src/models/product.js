@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-class Container {
+class ProductSchema {
 
     constructor(route, format) {
         this.route = route;
@@ -56,7 +56,6 @@ class Container {
         try {
             let products = await this.getAll();
             const newProducts = products.filter( prod => prod.id !== id)
-            console.log(newProducts);
             return await fs.promises.writeFile(this.route, JSON.stringify(newProducts)); 
         } catch (err) {
            console.warn(err); 
@@ -74,6 +73,6 @@ class Container {
 
 };
 
-const products = new Container('./src/products.txt', 'utf-8');
+const Product = new ProductSchema('./src/products.txt', 'utf-8');
 
-module.exports = products;
+module.exports = Product;

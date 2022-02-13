@@ -1,15 +1,15 @@
-const products = require('../models/products');
+const Product = require('../models/product');
 
 //Obtener todos los productos
 const readProducts = async (req, res) => {
-  const getProducts = await products.getAll();
+  const getProducts = await Product.getAll();
   res.json({ok: true, products: getProducts});
 };
 
 //Obtener producto por id
 const readProductById = async (req, res) => {
   const {id} = req.params;
-  const productById = await products.getById(JSON.parse(id));
+  const productById = await Product.getById(JSON.parse(id));
 
   if(!productById) {
     res.status(404).json({
@@ -25,9 +25,9 @@ const readProductById = async (req, res) => {
 const createProduct = async (req, res) => {
   const product = req.body;
   product.price = parseInt(product.price)
-  await products.save(product);
+  await Product.save(product);
 
-  res.redirect("/admin");
+  res.json({ok: true, product});
 };
 
 //Editar producto por id
@@ -35,17 +35,19 @@ const updateProduct = async (req, res) => {
   const {id} = req.params;
   const newProduct = req.body;
   newProduct.price = parseInt(newProduct.price)
-  await products.update(JSON.parse(id), newProduct);
+  await Product.update(JSON.parse(id), newProduct);
+  const allProducts = await Product.getAll();
 
-  res.json({ok: true, product: newProduct});
+  res.json({ok: true, products: allProducts, product: newProduct});
 };
 
 //Eliminar producto por id
 const deleteProduct = async (req, res) => {
   const {id} = req.params;
-  await products.deleteById(JSON.parse(id));
+  await Product.deleteById(JSON.parse(id));
+  const allProducts = await Product.getAll();
 
-  res.json({ok: true});
+  res.json({ok: true, products: allProducts});
 };
 
 module.exports = {

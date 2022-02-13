@@ -2,45 +2,59 @@
 <html lang="en">
   <%- include ('../template/template') %>
   <body>
-    <div class="container mt-5">
-      <h1 class="text-center">Editar producto</h1>
-      <hr />
-      <div class="d-flex justify-content-center mt-5">
-        <% if (product) { %>
-          <form id="formEditar" data-id = "<%= product.id %>"  class="w-50">
-            <div class="mb-3">
-              <input
-                type="text"
-                class="form-control"
-                name="title"
-                placeholder="Nombre"
-                value="<%= product.title %> "
-              />
-            </div>
-            <div class="mb-3">
-              <input
-                type="text"
-                class="form-control"
-                name="price"
-                placeholder="Precio"
-                value="<%= product.price %> "
-              />
-            </div>
-            <div class="mb-3">
-              <input
-                type="text"
-                class="form-control"
-                name="thumbnail"
-                placeholder="Imagen"
-                value="<%= product.thumbnail %> "
-              />
-            </div>
-            <button type="submit" class="btn btn-success">Enviar</button>
-          </form>
-          <% } else{ %>  
-            <h2 class="mt-5 text-danger">No se encuentra el producto</h2>
-         <% } %>
+    <div id="contenedor" class="container mt-5" data-id = "<%= product.id %> ">
+      <a href="/admin" class="text-decoration-none text-light"><button class="btn btn-secondary mb-3">Volver</button></a>
+      <h2>Artículo: </h2>
+      <div class="d-flex flex-wrap">
+        <span class="text-muted text-decoration-underline fs-3 fw-normal" id="articulo"></span>
+        <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modal-edit">Editar producto</button>
       </div>   
+      <div class="modal fade" id="modal-edit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div>
+                <% if (product) { %>
+                  <form id="formEditar" data-id = "<%= product.id %>"  class="w-100">
+                    <div class="mb-3">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="title"
+                        placeholder="Nombre"
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="price"
+                        placeholder="Precio"
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="thumbnail"
+                        placeholder="Imagen"
+                      />
+                    </div>
+                    <button type="submit" class="btn btn-success w-100" data-bs-dismiss="modal">Enviar</button>
+                  </form>
+              </div>
+              <% } else{ %>  
+                <h2 class="mt-5 text-danger">No se encuentra el producto</h2>
+             <% } %>
+          </div>
+        </div>
+      </div>
+
+      <script src="/socket.io/socket.io.js"></script>
       <script src="/js/update.js"></script>
   </body>
 </html>

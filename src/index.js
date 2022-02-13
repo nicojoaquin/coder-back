@@ -1,25 +1,15 @@
 const express = require('express');
+const http = require('http')
 const path = require('path');
-const { engine } = require ('express-handlebars');
-require('dotenv').config()
+const socketConnection = require('./helper/io');
 
-
-//Variables
 const app = express();
-const PORT = process.env.PORT || 5000;
+const server = http.createServer(app);
+
+require('dotenv').config()
+const PORT = process.env.PORT || 4000;
 
 //...........Settings.............
-
-//HBS
-// app.engine('hbs', engine({
-//   extname: 'hbs'
-// }));
-// app.set('view engine', 'hbs')
-// app.set('views', path.join(__dirname, 'views/hbs'));
-
-//PUG
-// app.set('view engine', 'pug')
-// app.set('views', path.join(__dirname, 'views/pug'));
 
 //EJS
 app.set('view engine', 'ejs');
@@ -32,16 +22,20 @@ app.use(express.urlencoded({extended: true}));
 
 //...........Settings.............
 
+// Socket IO 
+socketConnection(server)
+
 //Routes
-app.get('/', (req, res) => {
-  res.send('<h1>Inicio</h1>')
-});
 app.use('/admin', require('./routes/admin'));
 app.use('/api/products', require('./routes/products'));
+app.use('/api/mensajes', require('./routes/mensajes'));
+app.get('*', (req, res) => {
+  res.render('pages/404')
+})
 
 //Server
-const server = app.listen(PORT, () => {
-    console.log(`Server en ${PORT}`);
+server.listen(PORT, () => {
+    console.log(`Server en http://localhost:${server.address().port}`);
 });
 
 //Error
