@@ -9,8 +9,7 @@ const ID =  document.querySelector('#contenedor').dataset.id;
 const displayProduct = (product) => {
   document.querySelector('#articulo').textContent = product.title
   title.value = product.title;
-  price.value = product.price;
-  thumbnail.value = product.thumbnail;
+  price.value = product.price; 
 }
 
 const getData = async () => {
@@ -21,24 +20,25 @@ const getData = async () => {
   } catch (err) {
     console.warn(err);
   }
-  
 }
 
 formEditar?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const id = formEditar.dataset.id;  
 
+  const title = document.querySelector('#title');
+  const price = document.querySelector('#price');
+  const thumbnail = document.querySelector('#thumbnail');
+
+  const formData = new FormData();
+  formData.append('title', title.value);
+  formData.append('price', price.value);
+  formData.append(`images`, thumbnail.files[0]);
+
   try { 
     const res = await fetch(`/api/products/${id}`, {
       method: "put",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        title: title.value,
-        price: price.value,
-        thumbnail: thumbnail.value
-      })
+      body: formData
     });
     const data = await res.json();
       

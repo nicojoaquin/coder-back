@@ -10,11 +10,11 @@ const inputEmail = document.querySelector("#input-email");
 const inputUser = document.querySelector("#input-user");
 const inputMsg = document.querySelector("#input-msg");
 
-const displayProducts = (product) => {
+const displayProducts = (product) => {    
     productsContainer.innerHTML += 
       `
         <tr>
-          <th scope="row">${product.id}</th>
+          <th scope="row"><img width= "45" height= "40" class= "rounded-circle" src = "${product.images[0].url}" alt= "product.title" /></th>
           <td>${product.title}</td>
           <td>$${product.price}</td>
           <td>
@@ -62,17 +62,15 @@ formAdd.addEventListener('submit', async (e) => {
   const priceValue = document.querySelector('#price');
   const thumbnailValue = document.querySelector('#thumbnail');
 
+  const formData = new FormData();
+  formData.append('title', titleValue.value);
+  formData.append('price', priceValue.value);
+  formData.append(`images`, thumbnailValue.files[0]);
+
   try {
     const res = await fetch('api/products', {
       method: "POST",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        title: titleValue.value,
-        price: priceValue.value,
-        thumbnail: thumbnailValue.value
-      })
+      body: formData
     });
     const data = await res.json();
     if(data.ok){
@@ -82,9 +80,7 @@ formAdd.addEventListener('submit', async (e) => {
     console.warn(err);
   }
 
-  titleValue.value = ''
-  priceValue.value = ''
-  thumbnailValue.value = ''
+  formAdd.reset();
 })
 
 productsContainer?.addEventListener('click', (e) => {

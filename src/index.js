@@ -1,6 +1,9 @@
 const express = require('express');
+const cors = require('cors');
 const http = require('http')
 const path = require('path');
+const multer = require('multer');
+const cloudinaryConfig = require('./config/cloudinary');
 const socketConnection = require('./helper/io');
 
 const app = express();
@@ -8,6 +11,10 @@ const server = http.createServer(app);
 
 require('dotenv').config()
 const PORT = process.env.PORT || 4000;
+
+//Cors
+app.use(cors())
+
 
 //...........Settings.............
 
@@ -21,6 +28,16 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 //...........Settings.............
+
+//Middlewares
+const storage = multer.diskStorage({
+  destination: path.join(__dirname, 'public/uploads'),
+  filename: (req, file, cb, filename) => {
+    cb(null, new Date().getTime() + path.extname(file.originalname))
+  }
+});
+app.use(multer({storage}).array('images'));
+cloudinaryConfig();
 
 // Socket IO 
 socketConnection(server)

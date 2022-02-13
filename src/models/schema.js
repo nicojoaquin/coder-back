@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-class ProductSchema {
+class Schema {
 
     constructor(route, format) {
         this.route = route;
@@ -20,43 +20,43 @@ class ProductSchema {
     //Obtener producto del array por idsuccess
     async getById(id){
         try {
-            let products = await this.getAll();
-            const product = products.find( prod => prod.id === id);
-            return product;
+            let items = await this.getAll();
+            const item = items.find( it => it.id === id);
+            return item;
         } catch (err) {
             console.warn(err);
         }
     };
 
     //Agregar un nuevo producto al array con un id que se suma
-    async save(product){
+    async save(item){
         try {
-            let products = await this.getAll();
-            let maxNum = products.length;
-            maxNum === 0 ? product.id = 1 : product.id = products[maxNum - 1].id + 1;
-            products.push(product);
-            await fs.promises.writeFile(this.route, JSON.stringify(products));
+            let items = await this.getAll();
+            let maxNum = items.length;
+            maxNum === 0 ? item.id = 1 : item.id = items[maxNum - 1].id + 1;
+            items.push(item);
+            await fs.promises.writeFile(this.route, JSON.stringify(items));
         } catch (err) {
             console.warn(err);
         }
     };
     
     //Actualizar un producto del array por su id
-    async update(id, product){
-        let products = await this.getAll();
-        const updatedProducts = products.map( prod => prod.id === id ?
-            {...prod, ...product}
+    async update(id, item){
+        let items = await this.getAll();
+        const updatedItems = items.map( it => it.id === id ?
+            {...it, ...item}
             :
-            prod);
-        return await fs.promises.writeFile(this.route, JSON.stringify(updatedProducts)); 
+            it);
+        return await fs.promises.writeFile(this.route, JSON.stringify(updatedItems)); 
     };
 
     //Eliminar un producto del array por su id
     async deleteById(id){
         try {
-            let products = await this.getAll();
-            const newProducts = products.filter( prod => prod.id !== id)
-            return await fs.promises.writeFile(this.route, JSON.stringify(newProducts)); 
+            let items = await this.getAll();
+            const updatedItems = items.filter( it => it.id !== id)
+            return await fs.promises.writeFile(this.route, JSON.stringify(updatedItems)); 
         } catch (err) {
            console.warn(err); 
         }
@@ -73,6 +73,10 @@ class ProductSchema {
 
 };
 
-const Product = new ProductSchema('./src/products.txt', 'utf-8');
+const Product = new Schema('./src/products.txt', 'utf-8');
+const Mensaje = new Schema('./src/mensajes.txt', 'utf-8');
 
-module.exports = Product;
+module.exports = {
+  Product,
+  Mensaje
+};

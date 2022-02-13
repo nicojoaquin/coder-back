@@ -17,7 +17,7 @@
         <table class="table table-striped table-hover table-dark w-100">
           <thead>
             <tr>
-              <th scope="col">ID</th>
+              <th scope="col"></th>
               <th scope="col">Nombre</th>
               <th scope="col">Precio</th>
               <th scope="col">Editar/Eliminar</th>
@@ -93,12 +93,8 @@
                   />
                 </div>
                 <div class="mb-3">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="thumbnail"
-                    placeholder="Imagen"
-                  />
+                  <label for="thumbnail" class="form-label">Imagen</label>
+                  <input class="form-control" type="file" id="thumbnail" />
                 </div>
                 <button
                   type="submit"

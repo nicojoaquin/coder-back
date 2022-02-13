@@ -1,4 +1,4 @@
-const Mensaje = require('../models/mensaje');
+const {Mensaje} = require('../models/schema');
 
 //Obtener todos los productos
 const readMessages = async (req, res) => {

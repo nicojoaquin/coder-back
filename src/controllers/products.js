@@ -1,4 +1,6 @@
-const Product = require('../models/product');
+const {Product} = require('../models/schema');
+const cloudinary = require('cloudinary').v2
+const fs = require('fs-extra');
 
 //Obtener todos los productos
 const readProducts = async (req, res) => {
@@ -9,41 +11,82 @@ const readProducts = async (req, res) => {
 //Obtener producto por id
 const readProductById = async (req, res) => {
   const {id} = req.params;
-  const productById = await Product.getById(JSON.parse(id));
+  const product = await Product.getById(JSON.parse(id));
 
-  if(!productById) {
+  if(!product) {
     res.status(404).json({
       ok: false,
       msg: "No se encuentra el producto"
     })
   }
   
-  res.json({ok: true, product: productById});
+  res.json({ok: true, product});
 };
 
 //Agregar un producto
 const createProduct = async (req, res) => {
   const product = req.body;
-  product.price = parseInt(product.price)
-  await Product.save(product);
+  const img = req.files[0];
 
-  res.json({ok: true, product});
+  const {url, public_id} = await cloudinary.uploader.upload(img.path);
+
+  product.price = parseInt(product.price)
+
+  const newProduct = {
+    ...product,
+    images: [{url, public_id}]
+  }
+
+  await Product.save(newProduct);
+  await fs.unlink(req.files[0].path);
+  res.json({ok: true, product: newProduct});
 };
 
 //Editar producto por id
 const updateProduct = async (req, res) => {
   const {id} = req.params;
-  const newProduct = req.body;
-  newProduct.price = parseInt(newProduct.price)
-  await Product.update(JSON.parse(id), newProduct);
-  const allProducts = await Product.getAll();
+  const product = req.body;
+  const img = req.files[0];
 
-  res.json({ok: true, products: allProducts, product: newProduct});
+  let imgUrl;
+  let imgPublic_id;
+  
+  const products = await Product.getAll();
+  const {images} = products.find( prod => prod.id.toString() === id);
+  
+  if(img) {
+    const {url, public_id} = await cloudinary.uploader.upload(img.path);
+    await cloudinary.uploader.destroy(images[0].public_id);
+    imgUrl = url;
+    imgPublic_id = public_id
+  }
+
+  product.price = parseInt(product.price);
+
+  const updatedProduct = {
+    ...product,
+    images: [{url: imgUrl || images[0].url, public_id: imgPublic_id || images[0].public_id}]
+  }
+
+  await Product.update(JSON.parse(id), updatedProduct);
+  if(img) {
+    await fs.unlink(req.files[0].path)
+  }
+  const allProducts = await Product.getAll();
+  res.json({ok: true, products: allProducts, product: updatedProduct});
 };
 
 //Eliminar producto por id
 const deleteProduct = async (req, res) => {
   const {id} = req.params;
+
+  const {images} = await Product.getById(JSON.parse(id));
+  const deleteImgs = images.map( img => {
+    cloudinary.uploader.destroy(img.public_id)
+  });
+
+  await Promise.all(deleteImgs);
+
   await Product.deleteById(JSON.parse(id));
   const allProducts = await Product.getAll();
 
