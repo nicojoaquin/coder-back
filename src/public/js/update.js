@@ -1,8 +1,8 @@
+const socket = io();
 const formEditar = document.querySelector('#formEditar');
 const title = document.querySelector('#title')
 const price = document.querySelector('#price')
 const thumbnail = document.querySelector('#thumbnail')
-const socket = io();
 
 const ID =  document.querySelector('#contenedor').dataset.id;
 
@@ -43,8 +43,8 @@ formEditar?.addEventListener('submit', async (e) => {
     const data = await res.json();
       
     if(data.ok) {
+      socket.emit('update', data.product);
       socket.emit('change', data.products);
-      socket.emit('display', data.product);
     }
   } catch (err) {
       console.warn(err);

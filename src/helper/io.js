@@ -1,9 +1,10 @@
 const { Server } = require("socket.io");
 
-//Productos
 module.exports = (server) => {
-  const io = new Server(server);
 
+  const io = new Server(server);
+  
+  //Productos
   io.on('connection', socket => {
     socket.on('change', data => {
       io.sockets.emit('products', data)
@@ -18,10 +19,10 @@ module.exports = (server) => {
 
 
   //Chat usuarios
-  const usuarios = [];
   io.on('connection', socket => {
     socket.on('message', data => {
       io.sockets.emit('msg', data);
     });
   })
+  
 }
