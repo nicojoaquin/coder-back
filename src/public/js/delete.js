@@ -14,7 +14,14 @@ const displayProducts = (product) => {
     productsContainer.innerHTML += 
       `
         <tr>
-          <th scope="row"><img width= "45" height= "40" class= "rounded-circle" src = "${product.images[0].url}" alt= "product.title" /></th>
+          <th scope="row">
+            ${product.images.length === 0
+            ?
+            `<img width= "45" height= "40" class= "rounded-circle" src = "/assets/desconocido.jpg" alt= "product.title" />`
+            :
+            `<img width= "45" height= "40" class= "rounded-circle product-img" src = ${product.images[0].url} alt= "product.title" />`
+            }
+          </th>
           <td>${product.title}</td>
           <td>$${product.price}</td>
           <td>

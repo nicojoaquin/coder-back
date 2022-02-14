@@ -9,6 +9,10 @@ header {
   background-color: rgb(185, 184, 184);
 }
 
+.product-img {
+  object-fit: cover;
+}
+
 .chat {
   margin-top: 200px;
 }

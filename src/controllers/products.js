@@ -28,17 +28,29 @@ const createProduct = async (req, res) => {
   const product = req.body;
   const img = req.files[0];
 
-  const {url, public_id} = await cloudinary.uploader.upload(img.path);
+  let imgArr;
+
+  if(img) {
+    const {url, public_id} = await cloudinary.uploader.upload(img.path);
+    imgArr = [{
+      url,
+      public_id
+    }]
+  } else {
+    imgArr = []
+  }
 
   product.price = parseInt(product.price)
 
   const newProduct = {
     ...product,
-    images: [{url, public_id}]
+    images: imgArr
   }
 
   await Product.save(newProduct);
-  await fs.unlink(req.files[0].path);
+  if(img) {
+    await fs.unlink(img.path);
+  }
   res.json({ok: true, product: newProduct});
 };
 
@@ -48,29 +60,33 @@ const updateProduct = async (req, res) => {
   const product = req.body;
   const img = req.files[0];
 
-  let imgUrl;
-  let imgPublic_id;
+  let imgArr;
   
   const products = await Product.getAll();
   const {images} = products.find( prod => prod.id.toString() === id);
   
   if(img) {
     const {url, public_id} = await cloudinary.uploader.upload(img.path);
-    await cloudinary.uploader.destroy(images[0].public_id);
-    imgUrl = url;
-    imgPublic_id = public_id
+    imgArr = [{
+      url,
+      public_id
+    }]
+  } else {
+    imgArr = [];
   }
+  
+  images.length > 0 && await cloudinary.uploader.destroy(images[0].public_id);
 
   product.price = parseInt(product.price);
 
   const updatedProduct = {
     ...product,
-    images: [{url: imgUrl || images[0].url, public_id: imgPublic_id || images[0].public_id}]
+    images: imgArr
   }
 
   await Product.update(JSON.parse(id), updatedProduct);
   if(img) {
-    await fs.unlink(req.files[0].path)
+    await fs.unlink(img.path)
   }
   const allProducts = await Product.getAll();
   res.json({ok: true, products: allProducts, product: updatedProduct});
@@ -81,11 +97,13 @@ const deleteProduct = async (req, res) => {
   const {id} = req.params;
 
   const {images} = await Product.getById(JSON.parse(id));
-  const deleteImgs = images.map( img => {
-    cloudinary.uploader.destroy(img.public_id)
-  });
 
-  await Promise.all(deleteImgs);
+  if(images.length > 0) {
+    const deleteImgs = images.map( img => {
+      cloudinary.uploader.destroy(img.public_id)
+    });  
+    await Promise.all(deleteImgs);
+  }
 
   await Product.deleteById(JSON.parse(id));
   const allProducts = await Product.getAll();
