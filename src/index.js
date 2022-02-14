@@ -15,7 +15,6 @@ const PORT = process.env.PORT || 4000;
 //Cors
 app.use(cors())
 
-
 //...........Settings.............
 
 //EJS
