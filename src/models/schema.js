@@ -75,8 +75,10 @@ class Schema {
 
 const Product = new Schema('./src/products.txt', 'utf-8');
 const Mensaje = new Schema('./src/mensajes.txt', 'utf-8');
+const Cart = new Schema('./src/carrito.txt', 'utf-8');
 
 module.exports = {
   Product,
-  Mensaje
+  Mensaje,
+  Cart
 };

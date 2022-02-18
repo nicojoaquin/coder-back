@@ -77,11 +77,16 @@ formAdd.addEventListener('submit', async (e) => {
   try {
     const res = await fetch('api/products', {
       method: "POST",
+      headers: {
+        'admin': "true"
+      },
       body: formData
     });
     const data = await res.json();
     if(data.ok){
       socket.emit('display', data.product);
+    } else {
+      alert(data.msg);
     }
   } catch (err) {
     console.warn(err);
@@ -100,10 +105,17 @@ productsContainer?.addEventListener('click', (e) => {
       else if(e.target.classList.contains('conf-btn')) {
 
         try { 
-          const res = await fetch(`/api/products/${id}`, {method: "delete"})
+          const res = await fetch(`/api/products/${id}`, {
+            method: "DELETE",
+            headers: {
+              'admin': "true"
+            },
+          })
           const data = await res.json();
           if(data.ok) {
             socket.emit('change', data.products);
+          } else {
+            alert(data.msg);
           }
         } catch (err) {
           console.warn(err);

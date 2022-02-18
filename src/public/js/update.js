@@ -38,6 +38,9 @@ formEditar?.addEventListener('submit', async (e) => {
   try { 
     const res = await fetch(`/api/products/${id}`, {
       method: "put",
+      headers: {
+        'admin': 'true'
+      },
       body: formData
     });
     const data = await res.json();
@@ -45,6 +48,8 @@ formEditar?.addEventListener('submit', async (e) => {
     if(data.ok) {
       socket.emit('update', data.product);
       socket.emit('change', data.products);
+    } else {
+      alert(data.msg);
     }
   } catch (err) {
       console.warn(err);

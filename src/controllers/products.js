@@ -60,22 +60,20 @@ const updateProduct = async (req, res) => {
   const product = req.body;
   const img = req.files[0];
 
-  let imgArr;
+  const {images} = await Product.getById((JSON.parse(id)))
   
-  const products = await Product.getAll();
-  const {images} = products.find( prod => prod.id.toString() === id);
+  let imgArr;
   
   if(img) {
     const {url, public_id} = await cloudinary.uploader.upload(img.path);
+    images.length > 0 && await cloudinary.uploader.destroy(images[0].public_id);
     imgArr = [{
       url,
       public_id
     }]
   } else {
-    imgArr = [];
+    imgArr = images;
   }
-  
-  images.length > 0 && await cloudinary.uploader.destroy(images[0].public_id);
 
   product.price = parseInt(product.price);
 

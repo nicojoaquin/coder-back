@@ -1,5 +1,6 @@
 const {Router} = require('express');
 const {readProducts, readProductById, createProduct, updateProduct, deleteProduct, } = require('../controllers/products');
+const adminValidate = require('../middlewares/admin-validate');
 
 const router = Router();
 
@@ -10,12 +11,12 @@ router.get('/', readProducts);
 router.get('/:id', readProductById); 
 
 //Petición POST
-router.post('/', createProduct);
+router.post('/', adminValidate , createProduct);
 
 //Petición PUT
-router.put('/:id', updateProduct);
+router.put('/:id', adminValidate, updateProduct);
 
 //Petición DELETE
-router.delete('/:id', deleteProduct);
+router.delete('/:id', adminValidate, deleteProduct);
 
 module.exports = router;
