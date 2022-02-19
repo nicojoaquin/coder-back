@@ -27,7 +27,6 @@ const readProductById = async (req, res) => {
 const createProduct = async (req, res) => {
   const product = req.body;
   const img = req.files[0];
-  console.log(product);
 
   let imgArr;
 
