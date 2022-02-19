@@ -23,7 +23,10 @@ const displayProducts = (product) => {
             }
           </th>
           <td>${product.title}</td>
+          <td>${product.marca}</td>
+          <td>${product.cat}</td>
           <td>$${product.price}</td>
+          <td>${product.stock}</td>
           <td>
             <a
               href="/admin/product/${product.id}"
@@ -66,12 +69,20 @@ const getProductsData = async () => {
 formAdd.addEventListener('submit', async (e) => {
   e.preventDefault();
   const titleValue = document.querySelector('#title');
+  const marcaValue = document.querySelector('#marca');
+  const catValue = document.querySelector('#cat');
+  const descValue = document.querySelector('#desc');
   const priceValue = document.querySelector('#price');
+  const stockValue = document.querySelector('#stock');
   const thumbnailValue = document.querySelector('#thumbnail');
 
   const formData = new FormData();
   formData.append('title', titleValue.value);
+  formData.append('marca', marcaValue.value);
+  formData.append('cat', catValue.value);
+  formData.append('desc', descValue.value);
   formData.append('price', priceValue.value);
+  formData.append('stock', stockValue.value);
   formData.append(`images`, thumbnailValue.files[0]);
 
   try {
@@ -88,9 +99,10 @@ formAdd.addEventListener('submit', async (e) => {
     } else {
       alert(data.msg);
     }
+    getMessagesData()
   } catch (err) {
     console.warn(err);
-  }
+  } 
 
   formAdd.reset();
 })

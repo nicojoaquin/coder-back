@@ -27,6 +27,7 @@ const readProductById = async (req, res) => {
 const createProduct = async (req, res) => {
   const product = req.body;
   const img = req.files[0];
+  console.log(product);
 
   let imgArr;
 
@@ -44,6 +45,7 @@ const createProduct = async (req, res) => {
 
   const newProduct = {
     ...product,
+    createdAt: Date.now(),
     images: imgArr
   }
 
@@ -96,12 +98,13 @@ const deleteProduct = async (req, res) => {
 
   const {images} = await Product.getById(JSON.parse(id));
 
-  if(images.length > 0) {
+  if(images) {
     const deleteImgs = images.map( img => {
       cloudinary.uploader.destroy(img.public_id)
     });  
     await Promise.all(deleteImgs);
   }
+
 
   await Product.deleteById(JSON.parse(id));
   const allProducts = await Product.getAll();

@@ -1,15 +1,23 @@
 const socket = io();
 const formEditar = document.querySelector('#formEditar');
-const title = document.querySelector('#title')
+const title = document.querySelector('#title');
+const marca = document.querySelector('#marca');
+const cat = document.querySelector('#cat');
+const desc = document.querySelector('#desc');
 const price = document.querySelector('#price')
-const thumbnail = document.querySelector('#thumbnail')
+const stock = document.querySelector('#stock');
+const thumbnail = document.querySelector('#thumbnail');
 
 const ID =  document.querySelector('#contenedor').dataset.id;
 
 const displayProduct = (product) => {
   document.querySelector('#articulo').textContent = product.title
   title.value = product.title;
+  marca.value = product.marca;
+  cat.value = product.cat;
+  desc.value = product.desc;
   price.value = product.price; 
+  stock.value = product.stock; 
 }
 
 const getData = async () => {
@@ -26,13 +34,13 @@ formEditar?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const id = formEditar.dataset.id;  
 
-  const title = document.querySelector('#title');
-  const price = document.querySelector('#price');
-  const thumbnail = document.querySelector('#thumbnail');
-
   const formData = new FormData();
   formData.append('title', title.value);
+  formData.append('marca', marca.value);
+  formData.append('cat', cat.value);
+  formData.append('desc', desc.value);
   formData.append('price', price.value);
+  formData.append('stock', stock.value);
   formData.append(`images`, thumbnail.files[0]);
 
   try { 

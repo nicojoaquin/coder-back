@@ -1,0 +1,1 @@
+[{"title":"MSI RADEON RX 6600 XT MECH","marca":"MSi","cat":"GPU","desc":"PLACA DE VIDEO MSI RADEON RX 6600 XT MECH","price":120000,"stock":"6","createdAt":1645302263952,"images":[{"url":"http://res.cloudinary.com/dxxp5trvn/image/upload/v1645302265/lb1gz3ieu14ufykt5jva.jpg","public_id":"lb1gz3ieu14ufykt5jva"}],"id":1}]
