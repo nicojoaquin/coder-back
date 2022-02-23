@@ -54,7 +54,7 @@ formEditar?.addEventListener('submit', async (e) => {
     const data = await res.json();
     if(data.ok) {
       socket.emit('update', data.product);
-      socket.emit('change', data.products);
+      socket.emit('change');
     } else {
       alert(data.msg);
     }

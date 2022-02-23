@@ -1,10 +1,10 @@
 const express = require('express');
-const { knex } = require('../config/db');
+const { msql } = require('../config/db');
 const router = express.Router();
 
 //EJS
 router.get('/', async (req, res) => {
-  const products = await knex.from('products').select('*');
+  const products = await msql.from('products').select('*').orderBy('created_AT', 'desc');
   res.render('pages/index', {products});
 });
 
@@ -12,7 +12,7 @@ router.get('/product/:id', async (req, res) => {
   try {
     const {id} = req.params;
 
-    const product = await knex.from('products').select('*').where('id', '=', JSON.parse(id))
+    const product = await msql.from('products').select('*').where('id', '=', JSON.parse(id))
 
     res.render("pages/product", {product: product[0]});
   } catch (error) {  

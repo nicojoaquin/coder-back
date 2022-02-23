@@ -1,4 +1,4 @@
-const { knex } = require('../config/db');
+const { msql } = require('../config/db');
 const cloudinary = require('cloudinary').v2
 const fs = require('fs-extra');
 
@@ -6,7 +6,7 @@ const fs = require('fs-extra');
 const readProducts = async (req, res) => {
 
  try {
-  const products = await knex.from('products').select('*');
+  const products = await msql.from('products').select('*').orderBy('created_AT', 'desc');
 
   res.json({ok:true, products})
  } catch (err) {
@@ -20,7 +20,7 @@ const readProductById = async (req, res) => {
   const {id} = req.params;
   
   try {
-    const product = await knex.from('products').select('*').where('id', '=', id);
+    const product = await msql.from('products').select('*').where('id', '=', id);
 
     if(product.length === 0) {
       return res.status(404).json({
@@ -55,7 +55,8 @@ const createProduct = async (req, res) => {
     imgId: imagen.public_id
   }
 
-  const prodId = await knex.from('products').returning('id').insert(newProduct);
+  const prodId = await msql.from('products').returning('id').insert(newProduct);
+  console.log(prodId);
 
   if(img) {
     await fs.unlink(img.path);
@@ -69,7 +70,7 @@ const updateProduct = async (req, res) => {
   const productChanges = req.body;
   const img = req.file;
 
-  const product = await knex.from('products').select('*').where('id', '=', id);
+  const product = await msql.from('products').select('*').where('id', '=', id);
   
   let imagen;
   
@@ -88,31 +89,26 @@ const updateProduct = async (req, res) => {
     imgId: imagen?.public_id ?? product[0].imgId
   }
 
-  await knex.from('products').where('id', '=', id).update(updatedProduct);
+  await msql.from('products').where('id', '=', id).update(updatedProduct);
 
   img && await fs.unlink(img.path)
   
-  const products = await knex.from('products').select('*');
-  
-  res.json({ok: true, products, product: updatedProduct});
+  res.json({ok: true, product: updatedProduct});
 };
 
 //Eliminar producto por id
 const deleteProduct = async (req, res) => {
   const {id} = req.params;
 
-  const product = await knex.from('products').select('*').where('id', '=', id)
-  console.log(product);
+  const product = await msql.from('products').select('*').where('id', '=', id)
 
   if(product[0]?.image) {
     await cloudinary.uploader.destroy(product[0].imgId) 
   }
 
-  await knex.from('products').where('id', '=', id).del();
+  await msql.from('products').where('id', '=', id).del();
 
-  const products = await knex.from('products').select('*');
-
-  res.json({ok: true, products});
+  res.json({ok: true});
 };
 
 module.exports = {

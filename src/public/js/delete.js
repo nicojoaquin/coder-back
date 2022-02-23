@@ -10,60 +10,60 @@ const inputEmail = document.querySelector("#input-email");
 const inputUser = document.querySelector("#input-user");
 const inputMsg = document.querySelector("#input-msg");
 
-const displayProducts = (product) => {    
-    productsContainer.innerHTML += 
-      `
-        <tr>
-          <th scope="row">
-            ${product.image === null
-            ?
-            `<img width= "45" height= "40" class= "rounded-circle" src = "/assets/desconocido.jpg" alt= "product.title" />`
-            :
-            `<img width= "45" height= "40" class= "rounded-circle product-img" src = ${product.image} alt= "product.title" />`
-            }
-          </th>
-          <td>${product.title}</td>
-          <td>${product.marca}</td>
-          <td>${product.cat}</td>
-          <td>$${product.price}</td>
-          <td>${product.stock}</td>
-          <td>
-            <a
-              href="/admin/product/${product.id}"
-              class="text-decoration-none"
-            >
-              <button class="btn btn-primary" id="editarBtn">
-                <i class="bi bi-pencil-fill"></i>
-              </button>
-            </a>
-            <button
-              class="btn btn-danger ms-3"
-              data-id="${product.id}"
-              data-bs-toggle="modal"
-              data-bs-target="#confirm-modal"
-            >
-              <i
-                class="bi bi-trash-fill"
-                id="eliminarBtn"
+const displayProducts = (products) => { 
+    productsContainer.innerHTML = '';
+    products.map( product => {
+      productsContainer.innerHTML += 
+        `
+          <tr>
+            <th scope="row">
+              ${product.image === null
+              ?
+              `<img width= "45" height= "40" class= "rounded-circle" src = "/assets/desconocido.jpg" alt= "product.title" />`
+              :
+              `<img width= "45" height= "40" class= "rounded-circle product-img" src = ${product.image} alt= "product.title" />`
+              }
+            </th>
+            <td>${product.title}</td>
+            <td>${product.marca}</td>
+            <td>${product.cat}</td>
+            <td>$${product.price}</td>
+            <td>${product.stock}</td>
+            <td>
+              <a
+                href="/admin/product/${product.id}"
+                class="text-decoration-none"
+              >
+                <button class="btn btn-primary" id="editarBtn">
+                  <i class="bi bi-pencil-fill"></i>
+                </button>
+              </a>
+              <button
+                class="btn btn-danger ms-3"
                 data-id="${product.id}"
-              ></i>
-            </button>
-          </td>
-        </tr>
-      `
+                data-bs-toggle="modal"
+                data-bs-target="#confirm-modal"
+              >
+                <i
+                  class="bi bi-trash-fill"
+                  id="eliminarBtn"
+                  data-id="${product.id}"
+                ></i>
+              </button>
+            </td>
+          </tr>
+        `
+    })  
 }
 
-const getProductsData = async () => {
+const getProductsData = async () => { 
   try {
     const res = await fetch('/api/products');
     const {products} = await res.json();
-    products.map( product => {
-      displayProducts(product)
-    })
+    displayProducts(products)
   } catch (err) {
     console.warn(err);
   }
-  
 }
 
 formAdd.addEventListener('submit', async (e) => {
@@ -95,11 +95,10 @@ formAdd.addEventListener('submit', async (e) => {
     });
     const data = await res.json();
     if(data.ok){
-      socket.emit('display', data.product);
+      socket.emit('change');
     } else {
       alert(data.msg);
     }
-    getMessagesData()
   } catch (err) {
     console.warn(err);
   } 
@@ -125,7 +124,7 @@ productsContainer?.addEventListener('click', (e) => {
           })
           const data = await res.json();
           if(data.ok) {
-            socket.emit('change', data.products);
+            socket.emit('change');
           } else {
             alert(data.msg);
           }
@@ -138,21 +137,9 @@ productsContainer?.addEventListener('click', (e) => {
   }
 }); 
 
-socket.on('products', data => {
-  productsContainer.innerHTML = '';
-  data.map( product => {
-    displayProducts(product)
-  })
+socket.on ('products', () => {
+  getProductsData()
 })
-
-socket.on ('product', data => {
-  (async () => {
-    const res = await fetch('/api/products');
-    const {products} = await res.json();
-    displayProducts(products.find( product => product.id === data))
-  })();
-})
-
 
 // .....................................................
 
