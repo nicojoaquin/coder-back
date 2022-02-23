@@ -15,11 +15,11 @@ const displayProducts = (product) => {
       `
         <tr>
           <th scope="row">
-            ${product.images.length === 0
+            ${product.image === null
             ?
             `<img width= "45" height= "40" class= "rounded-circle" src = "/assets/desconocido.jpg" alt= "product.title" />`
             :
-            `<img width= "45" height= "40" class= "rounded-circle product-img" src = ${product.images[0].url} alt= "product.title" />`
+            `<img width= "45" height= "40" class= "rounded-circle product-img" src = ${product.image} alt= "product.title" />`
             }
           </th>
           <td>${product.title}</td>
@@ -83,7 +83,7 @@ formAdd.addEventListener('submit', async (e) => {
   formData.append('desc', descValue.value);
   formData.append('price', priceValue.value);
   formData.append('stock', stockValue.value);
-  formData.append(`images`, thumbnailValue.files[0]);
+  formData.append(`image`, thumbnailValue.files[0]);
 
   try {
     const res = await fetch('api/products', {
@@ -145,8 +145,12 @@ socket.on('products', data => {
   })
 })
 
-socket.on('product', data => {
-  displayProducts(data)
+socket.on ('product', data => {
+  (async () => {
+    const res = await fetch('/api/products');
+    const {products} = await res.json();
+    displayProducts(products.find( product => product.id === data))
+  })();
 })
 
 

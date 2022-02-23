@@ -41,7 +41,7 @@ formEditar?.addEventListener('submit', async (e) => {
   formData.append('desc', desc.value);
   formData.append('price', price.value);
   formData.append('stock', stock.value);
-  formData.append(`images`, thumbnail.files[0]);
+  formData.append(`image`, thumbnail.files[0]);
 
   try { 
     const res = await fetch(`/api/products/${id}`, {
@@ -52,7 +52,6 @@ formEditar?.addEventListener('submit', async (e) => {
       body: formData
     });
     const data = await res.json();
-      
     if(data.ok) {
       socket.emit('update', data.product);
       socket.emit('change', data.products);

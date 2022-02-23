@@ -5,7 +5,6 @@ const path = require('path');
 const multer = require('multer');
 const cloudinaryConfig = require('./config/cloudinary');
 const socketConnection = require('./helper/io');
-const { table } = require('./models/products');
 
 const app = express();
 const server = http.createServer(app);
@@ -36,7 +35,7 @@ const storage = multer.diskStorage({
     cb(null, new Date().getTime() + path.extname(file.originalname))
   }
 });
-app.use(multer({storage}).array('images'));
+app.use(multer({storage}).single('image'));
 cloudinaryConfig();
 
 // Socket IO 
@@ -47,7 +46,6 @@ app.use('/admin', require('./routes/admin'));
 app.use('/api/products', require('./routes/products'));
 app.use('/api/carrito', require('./routes/cart'));
 app.use('/api/mensajes', require('./routes/mensajes'));
-app.use('/test', require('./routes/mysqlTest'));
 app.get('*', (req, res) => {
   res.render('pages/404')
 })

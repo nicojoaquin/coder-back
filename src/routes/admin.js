@@ -1,18 +1,20 @@
 const express = require('express');
-const {Product} = require('../models/schema');
+const { knex } = require('../config/db');
 const router = express.Router();
 
 //EJS
 router.get('/', async (req, res) => {
-  const getProducts = await Product.getAll();
-  res.render('pages/index', {products: getProducts});
+  const products = await knex.from('products').select('*');
+  res.render('pages/index', {products});
 });
 
 router.get('/product/:id', async (req, res) => {
   try {
     const {id} = req.params;
-    const productById = await Product.getById(JSON.parse(id));
-    res.render("pages/product", {product: productById});
+
+    const product = await knex.from('products').select('*').where('id', '=', JSON.parse(id))
+
+    res.render("pages/product", {product: product[0]});
   } catch (error) {  
     res.redirect('/404')
   }

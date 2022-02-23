@@ -1,114 +1,118 @@
-const {Product} = require('../models/schema');
+const { knex } = require('../config/db');
 const cloudinary = require('cloudinary').v2
 const fs = require('fs-extra');
 
 //Obtener todos los productos
 const readProducts = async (req, res) => {
-  const getProducts = await Product.getAll();
-  res.json({ok: true, products: getProducts});
+
+ try {
+  const products = await knex.from('products').select('*');
+
+  res.json({ok:true, products})
+ } catch (err) {
+   console.warn(err);
+ }
+
 };
 
 //Obtener producto por id
 const readProductById = async (req, res) => {
   const {id} = req.params;
-  const product = await Product.getById(JSON.parse(id));
-
-  if(!product) {
-    res.status(404).json({
-      ok: false,
-      msg: "No se encuentra el producto"
-    })
-  }
   
-  res.json({ok: true, product});
+  try {
+    const product = await knex.from('products').select('*').where('id', '=', id);
+
+    if(product.length === 0) {
+      return res.status(404).json({
+        ok: false,
+        msg: "No se encuentra el producto"
+      })
+    }
+    res.json({ok: true, product: product[0]});
+
+  } catch (err) {
+    
+  }
 };
 
 //Agregar un producto
 const createProduct = async (req, res) => {
   const product = req.body;
-  const img = req.files[0];
+  const img = req.file;
 
-  let imgArr;
+  let imagen;
 
   if(img) {
     const {url, public_id} = await cloudinary.uploader.upload(img.path);
-    imgArr = [{
-      url,
-      public_id
-    }]
+    imagen = {url, public_id}
   } else {
-    imgArr = []
+    imagen = {url: null, public_id: null}
   }
-
-  product.price = parseInt(product.price)
 
   const newProduct = {
     ...product,
-    createdAt: Date.now(),
-    images: imgArr
+    image: imagen.url,
+    imgId: imagen.public_id
   }
 
-  await Product.save(newProduct);
+  const prodId = await knex.from('products').returning('id').insert(newProduct);
+
   if(img) {
     await fs.unlink(img.path);
   }
-  res.json({ok: true, product: newProduct});
+  res.json({ok: true, product: prodId[0]});
 };
 
 //Editar producto por id
 const updateProduct = async (req, res) => {
   const {id} = req.params;
-  const product = req.body;
-  const img = req.files[0];
+  const productChanges = req.body;
+  const img = req.file;
 
-  const {images} = await Product.getById((JSON.parse(id)))
+  const product = await knex.from('products').select('*').where('id', '=', id);
   
-  let imgArr;
+  let imagen;
   
   if(img) {
+    product[0].image && await cloudinary.uploader.destroy(product[0].imgId);
     const {url, public_id} = await cloudinary.uploader.upload(img.path);
-    images.length > 0 && await cloudinary.uploader.destroy(images[0].public_id);
-    imgArr = [{
+    imagen = {
       url,
       public_id
-    }]
-  } else {
-    imgArr = images;
-  }
-
-  product.price = parseInt(product.price);
+    }
+  } 
 
   const updatedProduct = {
-    ...product,
-    images: imgArr
+    ...productChanges,
+    image: imagen?.url ?? product[0].image,
+    imgId: imagen?.public_id ?? product[0].imgId
   }
 
-  await Product.update(JSON.parse(id), updatedProduct);
-  if(img) {
-    await fs.unlink(img.path)
-  }
-  const allProducts = await Product.getAll();
-  res.json({ok: true, products: allProducts, product: updatedProduct});
+  await knex.from('products').where('id', '=', id).update(updatedProduct);
+
+  img && await fs.unlink(img.path)
+  
+  const products = await knex.from('products').select('*');
+  
+  res.json({ok: true, products, product: updatedProduct});
 };
 
 //Eliminar producto por id
 const deleteProduct = async (req, res) => {
   const {id} = req.params;
 
-  const {images} = await Product.getById(JSON.parse(id));
+  const product = await knex.from('products').select('*').where('id', '=', id)
+  console.log(product);
 
-  if(images) {
-    const deleteImgs = images.map( img => {
-      cloudinary.uploader.destroy(img.public_id)
-    });  
-    await Promise.all(deleteImgs);
+  if(product[0]?.image) {
+    await cloudinary.uploader.destroy(product[0].imgId) 
   }
 
+  await knex.from('products').where('id', '=', id).del();
 
-  await Product.deleteById(JSON.parse(id));
-  const allProducts = await Product.getAll();
+  const products = await knex.from('products').select('*');
 
-  res.json({ok: true, products: allProducts});
+  res.json({ok: true, products});
 };
 
 module.exports = {
