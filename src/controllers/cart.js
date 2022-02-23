@@ -1,4 +1,5 @@
-const {Cart, Product} = require('../models/schema')
+const {Cart} = require('../models/schema')
+const { msql } = require('../config/db');
 
 //Crea un carrito con productos vacios
 const createCart = async (req, res) => {
@@ -24,11 +25,29 @@ const createCart = async (req, res) => {
 const saveProduct = async (req, res) => {
 
   const {id} = req.params;
-  const {product} = req.body;
+  const product = req.body;
 
   try {
     
-    const productExist = await Product.getById(JSON.parse(product.id));
+    const cart = await Cart.getById(JSON.parse(id));
+    
+    if(!cart) {
+      return res.status(404).json({
+        ok: false,
+        msg: "El carrito no existe"
+      });
+    }
+    
+    const productExist = await msql.from('products').select('*').where('id', '=', product.id);
+    
+    const productIsInCar = cart.products.find(product => product.id === productExist[0].id);
+ 
+    if(productIsInCar) {
+      return res.status(404).json({
+        ok: false,
+        msg: "El producto ya esta en el carrito"
+      });
+    }
 
     if(!productExist) {
       return res.status(404).json({
@@ -37,16 +56,7 @@ const saveProduct = async (req, res) => {
       });
     }
 
-    const cart = await Cart.getById(JSON.parse(id));
-
-    if(!cart) {
-      return res.status(404).json({
-        ok: false,
-        msg: "El carrito no existe"
-      });
-    }
-
-    cart.products.push(productExist);
+    cart.products.push(productExist[0]);
     
     const newCart = {
       ...cart,
@@ -134,7 +144,7 @@ const deleteProductInCart = async (req, res) => {
         msg: "El carrito no existe"
       });
     }
-
+    
     const productExist = await cart.products.find(product => product.id === JSON.parse(prod_id));
 
     if(!productExist) {
